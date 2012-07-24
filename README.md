@@ -1,5 +1,5 @@
-data-analysis
-=============
+math and data analysis functions
+================================
 
 *data analysis functions*
 
@@ -7,4 +7,5 @@ data-analysis
  - minhashing
  - palindromes detection
  - arithmetic problems resolution
+ - grammer parsing
 
