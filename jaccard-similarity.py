@@ -3,7 +3,7 @@
 # 
 # Author:      mourad mourafiq
 #
-# Copyright:   (c) mourad mourafiq
+# Copyright:   (c) mourad mourafiq 
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
 from __future__ import division

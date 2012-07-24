@@ -3,7 +3,7 @@
 # 
 # Author:      mourad mourafiq
 #
-# Copyright:   (c) mourad mourafiq 2012
+# Copyright:   (c) mourad mourafiq 
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
 from functools import update_wrapper
