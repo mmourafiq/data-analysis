@@ -8,4 +8,7 @@ math and data analysis functions
  - palindromes detection
  - arithmetic problems resolution
  - grammer parsing
+ - pooring problem
+ - hanoi tower
+ - inverse functions
 
