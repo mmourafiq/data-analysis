@@ -201,7 +201,7 @@ def sort_heap(heap_list):
     return sorted_heap
 
 
-#tests
+
 
 G = {}
 connections = [('a', 'g'), ('a', 'd'), ('d', 'g'), ('g', 'c'), ('b', 'f'), ('f', 'e'), ('e', 'h')]
