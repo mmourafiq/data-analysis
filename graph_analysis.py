@@ -122,6 +122,25 @@ def clustering_coef(graph, node, verbose=False):
     if verbose: print '%s\'s degree : %s, links between neighbors : %s. Culestering coef : %s' % (node, Dn, Vn, coef)    
     return coef 
 
+def random_clustering_coef(graph, node, nbr_iterations=1000000):
+    """
+    calculates the estimate clustering coef for a particular node in the graph
+    """
+    vindex = {}
+    d = 0
+    for w in graph[node].keys():
+        vindex[d] = w
+        d += 1
+    
+    total = 0
+    for i in range(1,nbr_iterations):
+        if d > 1:
+            pick = random.randint(0,d-1)
+            v1 = vindex[pick]
+            v2 = vindex[(pick+random.randint(1,d-1))%d]
+            if v2 in graph[v1]: total += 1
+        print i, (total+0.0)/i
+
 def average_cluestering(graph, verbose=True):
     average = sum([clustering_coef(graph, node, verbose=verbose) for node in graph])/len(graph)
     if verbose: print average
