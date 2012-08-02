@@ -8,7 +8,6 @@
 #!/usr/bin/env python
 
 from __future__ import division
-from math import *
 
 #exemple of stop words
 STOP_WORDS = set(('i', 'you', 'they',  'the', 'no', 'none', 'all', 'a', 'for', 'not', 'nor'))
@@ -90,6 +89,8 @@ def and_or_s_curve(r, b, and_first=True):
     for i in range(0, 9):
         p += 0.1
         print and_or_construction(p, r, b, and_first)
+
+from math import *
 
 def bloom_filter(n, m, k):
     """
