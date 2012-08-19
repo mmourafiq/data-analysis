@@ -71,7 +71,7 @@ def balance_adwords(biders, bids, items):
                 break
     return result
 
-def ageneralized_balance_adwords(biders, bids, items):
+def generalized_balance_adwords(biders, bids, items):
     """
     differs from the balance algoritghms in two ways:
         bias the choice of the bider in favor of the one with the higher bid
