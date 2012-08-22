@@ -8,9 +8,10 @@
 #!/usr/bin/env python
 from __future__ import division
 import multiprocessing
-from math import sqrt
 import collections 
 from map_reduce import MapReduce
+from similarities.correlation import pearson_sim
+from similarities.euclidean import euclidean_sim
 
 # A dictionary of movie critics and their ratings of a small
 # set of movies
@@ -29,9 +30,8 @@ def loadMovieLens(path='movielens'):
 
 critics =  loadMovieLens()
 
-PEARSON_SIMILARITY_CACHE = {}
-EUCLIDEAN_SIMILARITY_CACHE = {}
-TANIMOTO_SIMILARITY_CACHE = {}
+
+
 
 def transform_items(items):
     result=collections.defaultdict(dict)
@@ -42,110 +42,6 @@ def transform_items(items):
     return result
 
 
-def get_commun_items(x, y):
-    """
-    Returns the commun items between x and y
-    """
-    return [i for i in x.keys() if i in y.keys()] 
-    
-    
-def hamming_distance(s1, s2):
-    assert len(s1) == len(s2)
-    return sum(ch1 != ch2 for ch1, ch2 in zip(s1, s2))
-
-
-def euclidean_dis(x, y, commun_items):
-    """
-    Returns the euclidean distance between x and y for a given list of commun items
-    """
-    return sqrt(sum([pow(x[i] - y[i], 2) for i in commun_items]))
-
-
-def euclidean_sim(items, x, y, cache=False):
-    """
-    Returns the euclidean similarity between x and y.
-    """  
-    if cache:
-        if (x,y) in EUCLIDEAN_SIMILARITY_CACHE:
-            return EUCLIDEAN_SIMILARITY_CACHE[(x,y)]
-        i_x = items[x]
-        i_y = items[y]
-        sim =  1 / (1 + euclidean_dis(i_x, i_y, get_commun_items(i_x, i_y)))
-        EUCLIDEAN_SIMILARITY_CACHE[(x,y)] = sim
-        EUCLIDEAN_SIMILARITY_CACHE[(y,x)] = sim 
-        return sim
-    i_x = items[x]
-    i_y = items[y]
-    return 1 / (1 + euclidean_dis(i_x, i_y, get_commun_items(i_x, i_y)))
-
-def pearson_correlation(x, y, commun_items):
-    """
-    The population correlation coefficient corr(x,y) between x and y with expected
-    values m(x) and m(y) and standard deviations std(x) and std(y) is defined as:
-        corr(x,y) = cov(x, y) / (std(x) * std(y)) = E((x - m(x))(y - m(y))) / (std(x) * std(y))
-    
-    Returns the pearson correlation for x and y for a given list of commun items 
-    """
-    # Find the number of elements
-    n=len(commun_items)
-    # if they are no ratings in common, return 0
-    if n==0: return 0
-    # Add up all the preferences
-    sumX=sum([x[i] for i in commun_items])
-    sumY=sum([y[i] for i in commun_items])
-    # Sum up the squares
-    sumX2=sum([pow(x[i],2) for i in commun_items])
-    sumY2=sum([pow(y[i],2) for i in commun_items])
-    # Sum up the products
-    prodSum=sum([x[i]*y[i] for i in commun_items])
-    # Calculate Pearson score
-    num=prodSum-(sumX*sumY/n)
-    den=sqrt((sumX2-pow(sumX,2)/n)*(sumY2-pow(sumY,2)/n))
-    if den==0: return 0
-    r=num/den
-    return r
-
-
-def pearson_sim(items, x, y, cache=False):
-    """
-    Returns the similarity between x and y based on the pearson correaltion
-    """
-    if cache:
-        if (x,y) in PEARSON_SIMILARITY_CACHE:
-            return PEARSON_SIMILARITY_CACHE[(x,y)]
-        i_x = items[x]
-        i_y = items[y]
-        sim = pearson_correlation(i_x, i_y, get_commun_items(i_x, i_y))
-        PEARSON_SIMILARITY_CACHE[(x,y)] = sim
-        PEARSON_SIMILARITY_CACHE[(y,x)] = sim
-        return sim
-    i_x = items[x]
-    i_y = items[y]
-    return pearson_correlation(i_x, i_y, get_commun_items(i_x, i_y))
-
-def tanimoto_score(x, y, commun_items):
-    """
-    Return the tanimoto score :
-        X inter Y / X union Y
-    """
-    return len(commun_items)/(len(x) + len(y))
-
-def tanimoto_sim(items, x, y, cache=False):
-    """
-    Returns the similarity between x and y based on the tanimoto score
-    """
-    if cache:
-        if (x,y) in TANIMOTO_SIMILARITY_CACHE:
-            return TANIMOTO_SIMILARITY_CACHE[(x,y)]
-        i_x = items[x]
-        i_y = items[y]
-        sim = tanimoto_score(i_x, i_y, get_commun_items(i_x, i_y))
-        TANIMOTO_SIMILARITY_CACHE[(x,y)] = sim
-        TANIMOTO_SIMILARITY_CACHE[(y,x)] = sim
-        return sim
-    i_x = items[x]
-    i_y = items[y]
-    return tanimoto_score(i_x, i_y, get_commun_items(i_x, i_y))
 
 def top_similars_map(data):
     """
