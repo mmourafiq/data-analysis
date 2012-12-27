@@ -1,15 +1,14 @@
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Name:        jaccard similarity
 # 
 # Author:      mourad mourafiq
-#
-# Copyright:   (c) mourad mourafiq 
-#-------------------------------------------------------------------------------
-#!/usr/bin/env python
+# -------------------------------------------------------------------------------
+
 from __future__ import division
 
-EX_TUP_1 = ('a','a','a','b')
-EX_TUP_1 = ('a','a','b','b','c')
+EX_TUP_1 = ('a', 'a', 'a', 'b')
+EX_TUP_1 = ('a', 'a', 'b', 'b', 'c')
+
 
 def jaccard_sim(tup_1, tup_2, verbose=False):
     """
@@ -23,15 +22,17 @@ def jaccard_sim(tup_1, tup_2, verbose=False):
         count_1 = tup_1.count(i)
         count_2 = tup_2.count(i)
         inter += count_1 if count_1 < count_2 else count_2
-    j_sim = inter/sum
-    if verbose : print j_sim
+    j_sim = inter / sum
+    if verbose: print j_sim
     return j_sim
+
 
 def jaccard_distance(tup_1, tup_2):
     """
         Calculate the jaccard distance
     """
     return 1 - jaccard_sim(tup_1, tup_2)
+
 
 def jaccard_conditional_comparaison(tup, list_tups, min_jaccard_sim, verbose=False):
     """
@@ -60,19 +61,20 @@ def jaccard_conditional_comparaison(tup, list_tups, min_jaccard_sim, verbose=Fal
     """
     tup_length = len(tup)
     pre = int(((1 - min_jaccard_sim) * tup_length) + 1)
-    max_length = int(tup_length/min_jaccard_sim)
+    max_length = int(tup_length / min_jaccard_sim)
     min_length = tup_length - pre
     potential_tups = []
     for t in list_tups:
         t_length = len(t)
-        #first we check teh current tup length
+        # first we check teh current tup length
         if t_length >= min_length and t_length <= max_length:
             #second we should loop over all possible values for i & j
             for i in range(0, pre):
                 for j in range(0, pre):
                     p = tup_length - i
-                    q = t_length -j
-                    if (p >= q and ((q + 1)/(tup_length + j -1)) >= min_jaccard_sim) or (p < q and ((tup_length - i + 1) / (i + j -1 + q)) >= min_jaccard_sim):
+                    q = t_length - j
+                    if (p >= q and ((q + 1) / (tup_length + j - 1)) >= min_jaccard_sim) or (
+                                    p < q and ((tup_length - i + 1) / (i + j - 1 + q)) >= min_jaccard_sim):
                         potential_tups.append(t)
     if verbose: print potential_tups
     return potential_tups
